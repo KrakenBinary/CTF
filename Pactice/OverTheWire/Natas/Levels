@@ -1,0 +1,31 @@
+http://natas0.natas.labs.overthewire.org
+
+Level0
+	natas0
+	natas0
+	Notes:
+level1
+	natas1
+	gtVrDuiDfck831PqWsLEZy5gyDz1clto
+	Notes: use view-source:http:// in firefox
+level2
+	natas2
+	ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi
+	Notes:
+		# username:password
+		alice:BYNdCesZqW
+		bob:jw2ueICLvT
+		charlie:G5vCxkVV3m
+		natas3:sJIJNW6ucpu6HPZ1ZAchaDtwd7oGrD14
+		eve:zo4mJWyNj2
+		mallory:9urtcpzBmH
+level3
+	natas3
+	sJIJNW6ucpu6HPZ1ZAchaDtwd7oGrD14
+	Notes:
+		natas4:Z9tkRkWmpt9Qr7XrR5jWRkgOU901swEZ
+level4
+	natas4
+	Z9tkRkWmpt9Qr7XrR5jWRkgOU901swEZ
+	Notes:
+		http://natas4.natas.labs.overthewire.org
