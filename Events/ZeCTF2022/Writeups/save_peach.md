@@ -32,13 +32,13 @@ Still, the simply glaring issue is that a non-validated string is being executed
 
 ## Process
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/savepeach.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/savepeach.png)
 
 So again, no code to look at. So lets assume our hands will be ties since this one is tagged hard.
 Jumping in we connect and looking at the hint mentioning a python I will assume its python shell.
 First thing I like to do in a python shell is load os and spawn shell. Its a common solution.
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/bowser2.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/bowser2.png)
 
 next ... I wont lie: I spent about 3 hours testing various things for blacklist playing with print and trying to get overflow buffers.
 What I found in that time, that I started to focus on, was that any time you type the word eval it exits and says "Bowser no likey!"
@@ -53,7 +53,7 @@ import os; os.system("cat flag.txt")
 ```
 and here is the results:
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/bowser3.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/bowser3.png)
 
 ## Flag
 

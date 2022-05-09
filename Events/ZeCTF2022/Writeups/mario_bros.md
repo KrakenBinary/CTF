@@ -44,31 +44,31 @@ so you can see that your inputs are pushed through an eval in order to run them 
 
 ## Process
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros.png)
 
 This one is a netcat pwn with no files. So we cant see the source. I assume its a jail shell of some sort.
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros2.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros2.png)
 
 yeap. connecting to netcat we get a prompt asking if we are root. with a simple yes the shell mocks us.
 Normally a shell should not mock you. lets figure out what kind of shell this is.
 
 Lets run it through the alphabet to make sure it isn't black listing any of the basic things.
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros3.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros3.png)
 
 ok looks like our alphabet is intact ... lets try some other characters
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros4.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros4.png)
 
 
 that did break something. lets make sure we cant just open shell
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros5.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros5.png)
 
 apparently not. Lets try to echo something. The idea behind an $echo or $ls or something is that we are trying to access shell commands. This ended up working and I will just post my terminal so you can see how I played with it till I found how to use ls. 
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/mariobros6.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/mariobros6.png)
 
 So there is the flag!
 

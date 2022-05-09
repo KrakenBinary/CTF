@@ -16,7 +16,7 @@ The devs did give away 2 flags due to the other teams breaking the games. So 500
 ##Challenges:
 
 - Forensics
-    - [***Digital Ocean | 50***](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Writeups/digital_ocean.md)
+    - [***Digital Ocean | 50***](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Writeups/digital_ocean.md)
 - Web
     - **Super Secure | 100**
     - **I made a blog! | 150**
@@ -33,7 +33,7 @@ The devs did give away 2 flags due to the other teams breaking the games. So 500
     - **More Sense | 60**
     - McFly | 125
     - **No Kidding | 70**
-    - [***OMG | 80***](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Writeups/omg.md)
+    - [***OMG | 80***](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Writeups/omg.md)
     - Slow Slow Slow | 240
     - Share a Key | 450
     - Gift Wrapped | 380
@@ -41,8 +41,8 @@ The devs did give away 2 flags due to the other teams breaking the games. So 500
     - Too Many Colors | 490
     - The System | 510
 - Pwn
-    - [***Mario bros! | 100***](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Writeups/mario_bros.md)
-    - [***Save peach! | 300***](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Writeups/save_peach.md)
+    - [***Mario bros! | 100***](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Writeups/mario_bros.md)
+    - [***Save peach! | 300***](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Writeups/save_peach.md)
 - Steganography
     - **Bernie | 125**
     - **Neo | 150**

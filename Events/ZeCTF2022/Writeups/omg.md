@@ -6,7 +6,7 @@ No real exploit here. This is just specifically formatted text.
 
 ## Process
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/omg.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/omg.png)
 
 first we download the payload. We will notice it has no extension. So lets check it with files
 
@@ -24,7 +24,7 @@ $ strings OMG
 
 Lets see what this looks like in Geany since the strings are so long.
 
-![alt text](https://github.com/KrakenBinary/CTF-EzCTF2022/blob/main/Images/omg2.png)
+![alt text](https://github.com/KrakenBinary/CTF/blob/main/Events/ZeCTF2022/Images/omg2.png)
 
 and there it is. interesting.
 
