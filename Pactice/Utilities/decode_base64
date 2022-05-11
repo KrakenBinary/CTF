@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+'''
+Just base64 so I can test the flow
+
+Imports:
+    - haslib: SHA1, SHA224, SHA256, SHA384, and SHA512
+    - base36:
+    - base58:
+'''
+
+
+import argparse  # sudo apt-get install python-argparse
+# import hashlib  # pip install hashlib
+# import base36  # pip install base36
+# import base58  # pip install base58
+# import base62  # pip install pybase62
+import base64  # pip install pybase64
+# import base91  # pip install base91
+# import base92  # pip install pybase64
+# import binascii - no idea :/
+# from pwnlib.tubes.remote import remote
+# from urllib.parse import quote, unquote
+
+
+def main():
+    '''this is where the fun happens!'''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-b64', dest='b64', help='Base64 encode')
+    parser.add_argument('-db64', dest='db64', help='Base64 decode')
+
+    options = parser.parse_args()
+
+    if options.b64:
+        string_input = options.b64
+        string_to_b64(string_input)
+    elif options.db64:
+        string_input = options.db64
+        b64_to_string(string_input)
+
+
+def string_to_b64(string_input):
+    '''take base64 Convert encoding format to the normal character type'''
+    encode = base64.b64encode(bytes(string_input, 'UTF-8'))
+    print('Original:' + string_input)
+    print('Base64 encode: ' + str(encode).strip())
+
+
+def b64_to_string(string_input):
+    '''Convert the string to b32 Coding format'''
+    decode = base64.b64decode(string_input)
+    print('Base64 decode: ' + decode.decode('UTF-8'))
+
+
+if __name__ == '__main__':
+    main()

