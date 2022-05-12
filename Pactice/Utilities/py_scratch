@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+'''
+test
+'''
+
+import unittest
+import base36
+
+
+def method_for_test(string_input):
+    '''base36 Convert the encoding format to the normal character type'''
+    encode = base36.encode(string_input)
+    return encode
+
+
+class TestStringMethods(unittest.TestCase):
+    '''docstr'''
+    def test_things(self):
+        '''docstr'''
+        # self.assertIn('2732223524352615502', method_for_test('krakenbinary'))
+        self.assertEqual(method_for_test('krakenbinary'), '2732223524352615502')
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=0)

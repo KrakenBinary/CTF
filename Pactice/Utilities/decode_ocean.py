@@ -158,85 +158,99 @@ def b64_to_string(string_input):
 
 def string_to_b32(string_input):
     '''base32 Convert the encoding format to the normal character type'''
-    encode = base64.b32encode(string_input)
-    print('Original:' + string_input)
-    print('Base32 encode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    encode_base32 = base64.b32encode(encode)
+    return encode_base32.decode('utf-8')
 
 
 def b32_to_string(string_input):
     '''Convert the string to base16 Coding format'''
-    decode = base64.b32decode(string_input)
-    # print('Base32:' + string_input)
-    print('Base32 decode:' + str(decode))
+    encode = string_input.encode('utf-8')
+    decode = base64.b32decode(encode)
+    return decode.decode()
 
 
 def string_to_b16(string_input):
     '''base16 Convert the encoding format to the normal character type'''
-    encode = base64.b16encode(string_input)
-    print('Original:' + string_input)
-    print('Base16 encode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    encode_base16 = base64.b16encode(encode)
+    return encode_base16.decode('utf-8')
 
 
 def b16_to_string(string_input):
     '''Convert the string to base85 The first kind of coding format'''
-    decode = base64.b16decode(string_input)
-    # print('Base16:' + string_input)
-    print('Base16 decode:' + str(decode))
+    encode = string_input.encode('utf-8')
+    decode = base64.b16decode(encode)
+    return decode.decode()
 
 
 def string_to_a85(string_input):
-    '''string to base85'''
-    encode = base64.a85encode(string_input)
-    print('Original:' + string_input)
-    print('Base85_1 encode:' + str(encode))
+    '''
+    base64.a85encode(b, foldspaces=False, wrapcol=0, pad=False, adobe=False)
+    '''
+    encode = string_input.encode('utf-8')
+    encode_a85 = base64.a85encode(encode)
+    return encode_a85.decode('utf-8')
 
 
 def a85_to_string(string_input):
-    '''Convert the string to base85 The second kind of coding format'''
-    decode = base64.a85decode(string_input)
-    # print('Base85_1:' + string_input)
-    print('Base85_1 decode:' + str(decode))
+    '''
+    base64.a85encode(b, foldspaces=False, wrapcol=0, pad=False, adobe=False)
+    '''
+    encode = string_input.encode('utf-8')
+    decode = base64.a85decode(encode)
+    return decode.decode()
 
 
 def string_to_b85(string_input):
     '''base85'''
-    encode = base64.b85encode(string_input)
-    print('Original:' + string_input)
-    print('Base85_2 encode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    encode_b85 = base64.b85encode(encode)
+    return encode_b85.decode('utf-8')
 
 
 def b85_to_string(string_input):
     '''Convert the string to base36 Coding format'''
-    decode = base64.b85decode(string_input)
-    # print('Base85_2:' + string_input)
-    print('Base85_2 decode:' + str(decode))
+    encode = string_input.encode('utf-8')
+    decode = base64.b85decode(encode)
+    return decode.decode()
 
 
 def string_to_base36(string_input):
-    '''base36 Convert the encoding format to the normal character type'''
+    '''
+    ## ISSUE ##
+    Cannot encode base36 unless its only a-z. lowercase?
+    So this is likely useless for CTF
+    '''
     encode = base36.loads(string_input)
-    print('Original:' + string_input)
-    print('Base36 encode:' + str(encode))
+    return encode
 
 
 def base36_to_string(string_input):
-    '''Converts a string to base58 Coding format'''
-    decode = base36.dumps(int(string_input))
-    # print('Base36:' + string_input)
-    print('Base36 decode:' + str(decode))
+    '''
+    ## ISSUE ##
+    Cannot decode base36 unless its only 1-0
+    So this is likely useless for CTF
+    '''
+    decode = base36.dumps(string_input)
+    return decode
 
 
 def string_to_base58(string_input):
     '''base58 Convert the encoding format to the normal character type'''
-    encode = base58.b58encode(str(string_input))
-    print('Original:' + string_input)
-    print('Base58 encode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    encode_new = base58.b58encode(encode)
+    return encode_new.decode('utf-8')
 
 
 def base58_to_string(string_input):
     '''Converts a string to base91 Coding format'''
-    encode = base58.b58decode(string_input)
-    print('Base58 decode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    decode = base58.b58decode(encode)
+    return decode.decode()
+
+
+# Stopped here. VVVVVVVVV Need to finish the ones below
 
 
 def string_to_base91(string_input):
