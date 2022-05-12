@@ -13,6 +13,12 @@ Imports:
     - base92:
     - binascii:  # No idea :/
     - urllib.parse:
+
+Current Issues:
+    - base36 - only takes a-z for encoding and 1-0 for decoding. Not using
+    - url encode/decode requires proper HTML format. might be a way around
+        - google python-urllib-unquote-corrupt
+
 '''
 
 
@@ -124,9 +130,9 @@ def main():
     if options.dhex:
         dec_to_hex(options.dhex)
     if options.ord:
-        lett_to_ascii(options.ord)
+        string_to_ascii(options.ord)
     if options.chr:
-        ascii_to_lett(options.chr)
+        ascii_to_string(options.chr)
 
 
 def md5(string_input):
@@ -250,70 +256,92 @@ def base58_to_string(string_input):
     return decode.decode()
 
 
-# Stopped here. VVVVVVVVV Need to finish the ones below
-
-
 def string_to_base91(string_input):
     '''base58 Convert the encoding format to the normal character type'''
-    encode = base91.encode(string_input)
-    print('Original:' + string_input)
-    print('Base91 encode:' + str(encode))
+    encode = string_input.encode('utf-8')
+    encode_base91 = base91.encode(encode)
+    return encode_base91
 
 
 def base91_to_string(string_input):
     '''Convert the string to base Family bucket coding format'''
+    # encode = string_input.encode('utf-8')
     decode = base91.decode(string_input)
-    # print('Base91:' + string_input)
-    print('Base91 decode:' + str(decode))
-    # def basefamily(s):
-    # b64ToString(s)
-    # b32ToString(s)
-    # b16ToString(s)
-    # base58Tostring(s)
-    # base91Tostring(s)
-    # base36Tostring(s)
-    # base85_1Tostring(s)
-    # base85_2Tostring(s)
-    # Conduct url code
+    return decode.decode()
 
 
 def url_encode(string_input):
-    '''Conduct url code'''
+    '''
+    ## ISSUE ##
+    Not able to use because requires HTML formated string.
+    potential work around:
+    https://stackoverflow.com/questions/27774273/python-urllib-unquote-corrupt
+    '''
     encode = quote(string_input)
-    print('Original:' + string_input)
-    print('URL encode:' + encode)
+    print(quote(string_input))
+    return encode
 
 
 def url_decode(string_input):
-    '''Convert binary to decimal'''
+    '''
+    ## ISSUE ##
+    Not able to use because requires HTML formated string.
+    potential work around:
+    https://stackoverflow.com/questions/27774273/python-urllib-unquote-corrupt
+    '''
     decode = unquote(string_input)
-    print('URL encode:' + string_input)
-    print('URL decode:' + decode)
+    print(unquote(string_input))
+    return decode
+
+
+def str_to_bin(string_input):
+    '''Complete'''
+    result = ' '.join(format(ord(x), 'b') for x in string_input)
+    return result
+
+
+def str_to_dec(string_input):
+    '''Complete'''
+    encode = ' '.join(format(ord(x), 'b') for x in string_input)
+    result = ' '.join(format(ord(c), 'd') for c in encode)
+    return result
+
+
+def str_to_hex(string_input):
+    '''Complete'''
+    encode = string_input.encode('utf-8')
+    result = encode.hex()
+    return str(result)
+
+
+def str_to_oct(string_input):
+    '''todo'''
+    result = ' '.join(format(ord(x), 'o') for x in string_input)
+    return str(result)
 
 
 def bin_to_dec(string_input):
-    '''Convert octal to decimal'''
+    '''todo'''
     result = int(string_input, 2)
-    print('Binary :' + str(string_input))
-    print('Decimal :' + str(result))
+    return str(result)
 
 
 def oct_to_dec(string_input):
-    '''Convert hex to decimal'''
+    '''todo'''
     result = int(string_input, 8)
     print('Octal :' + str(string_input))
     print('Decimal :' + str(result))
 
 
 def hex_to_dec(string_input):
-    '''Convert decimal to binary'''
+    '''todo'''
     result = int(string_input, 16)
     print('Hex :' + str(string_input))
     print('Decimal :' + str(result))
 
 
 def dec_to_bin(string_input):
-    '''Convert decimal to octal'''
+    '''todo'''
     string_int = int(string_input)
     result = bin(string_int)
     print('Decimal:' + str(string_int))
@@ -321,7 +349,7 @@ def dec_to_bin(string_input):
 
 
 def dec_to_oct(string_input):
-    '''Convert decimal to hexadecimal'''
+    '''todo'''
     string_int = int(string_input)
     result = oct(string_int)
     print('Decimal :' + str(string_int))
@@ -329,24 +357,21 @@ def dec_to_oct(string_input):
 
 
 def dec_to_hex(string_input):
-    '''Convert the letters to the corresponding ASCII'''
+    '''todo'''
     string_int = int(string_input)
     result = hex(string_int)
     print('Decimal :' + str(string_int))
     print('Hex :' + str(result))
 
 
-def lett_to_ascii(string_input):
-    '''take ASCII Convert to the corresponding letters and characters'''
-    print('Letters:' + string_input)
-    result = ''
-    for i in string_input:
-        result = result + str(ord(i)) + ' '
-    print('ASCII :' + result)
+def string_to_ascii(string_input):
+    '''Complete'''
+    result = [ord(character) for character in string_input]
+    return str(result)
 
 
-def ascii_to_lett(string_input):
-    '''yup'''
+def ascii_to_string(string_input):
+    '''todo'''
     list_string = string_input.split(' ')
     result = ''
     print('ASCII :' + string_input)

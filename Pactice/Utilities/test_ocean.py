@@ -114,6 +114,7 @@ class TestStringMethods(unittest.TestCase):
             self.str_test,
             'b85 to string')
 
+    """
     def test_string_to_base36(self):
         '''docstr'''
         # new_str_test = decode_ocean.base36_to_string(self.str_test)
@@ -122,13 +123,14 @@ class TestStringMethods(unittest.TestCase):
             '2732223524352615502',
             'string to b36')
 
-    def test_string_to_base36(self):
+    def test_base36_to_string(self):
         '''docstr'''
         new_str_test = decode_ocean.string_to_base36('krakenbinary')
         self.looper(
             decode_ocean.base36_to_string(new_str_test),
             'krakenbinary',
             'b36 to string')
+    """
 
     def test_string_to_base58(self):
         '''docstr'''
@@ -144,6 +146,89 @@ class TestStringMethods(unittest.TestCase):
             decode_ocean.base58_to_string(new_str_test),
             self.str_test,
             'b85 to string')
+
+    def test_string_to_base91(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.string_to_base91(self.str_test),
+            '@iH<kv3j!&^+FkHSm}ect=kMf&8/Bk]oiB',
+            'string to base91')
+
+    def test_base91_to_string(self):
+        '''docstr'''
+        new_str_test = decode_ocean.string_to_base91(self.str_test)
+        self.looper(
+            decode_ocean.base91_to_string(new_str_test),
+            self.str_test,
+            'base91 to string')
+
+    """
+    def test_url_encode(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.url_encode(self.str_test),
+            'flagCTF%7Bkr4k3n_B1n4Ry_t3St%7D',
+            'string to url_encode')
+
+    def test_url_decode(self):
+        '''docstr'''
+        new_str_test = decode_ocean.url_encode(self.str_test)
+        self.looper(
+            decode_ocean.base91_to_string(new_str_test),
+            self.str_test,
+            'url_decode to string')
+    """
+
+    def test_str_to_bin(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.str_to_bin(self.str_test),
+            '1100110 1101100 1100001 1100111 1000011 1010100 1000110 '
+            '1111011 1101011 1110010 110100 1101011 110011 1101110 '
+            '1011111 1000010 110001 1101110 110100 1010010 1111001 '
+            '1011111 1110100 110011 1010011 1110100 1111101',
+            'url_decode to string')
+
+    def test_str_to_dec(self):
+        '''docstr'''
+        # new_str_test = decode_ocean.string_to_ascii(self.str_test)
+        self.looper(
+            decode_ocean.str_to_dec(self.str_test),
+            '49 49 48 48 49 49 48 32 49 49 48 49 49 48 48 32 49 49 48 48 '
+            '48 48 49 32 49 49 48 48 49 49 49 32 49 48 48 48 48 49 49 32 '
+            '49 48 49 48 49 48 48 32 49 48 48 48 49 49 48 32 49 49 49 49 '
+            '48 49 49 32 49 49 48 49 48 49 49 32 49 49 49 48 48 49 48 32 '
+            '49 49 48 49 48 48 32 49 49 48 49 48 49 49 32 49 49 48 48 49 '
+            '49 32 49 49 48 49 49 49 48 32 49 48 49 49 49 49 49 32 49 48 '
+            '48 48 48 49 48 32 49 49 48 48 48 49 32 49 49 48 49 49 49 48 '
+            '32 49 49 48 49 48 48 32 49 48 49 48 48 49 48 32 49 49 49 49 '
+            '48 48 49 32 49 48 49 49 49 49 49 32 49 49 49 48 49 48 48 32 '
+            '49 49 48 48 49 49 32 49 48 49 48 48 49 49 32 49 49 49 48 49 '
+            '48 48 32 49 49 49 49 49 48 49',
+            'url_decode to string')
+
+    def test_string_to_ascii(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.string_to_ascii(self.str_test),
+            '[102, 108, 97, 103, 67, 84, 70, 123, 107, 114, 52, 107, 51, '
+            '110, 95, 66, 49, 110, 52, 82, 121, 95, 116, 51, 83, 116, 125]',
+            'string to ascii')
+
+    def test_string_to_hex(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.str_to_hex(self.str_test),
+            '666c61674354467b6b72346b336e5f42316e3452795f743353747d',
+            'string to hex')
+
+    def test_string_to_oct(self):
+        '''docstr'''
+        self.looper(
+            decode_ocean.str_to_oct(self.str_test),
+            '146 154 141 147 103 124 106 173 153 162 64 153 63 156 137 '
+            '102 61 156 64 122 171 137 164 63 123 164 175',
+            'string to oct')
 
 
 if __name__ == '__main__':
