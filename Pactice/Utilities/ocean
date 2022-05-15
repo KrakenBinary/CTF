@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+# -*- coding:utf-8 -*-
+'''
+CTF Finder where the objective is to itterate through encryption
+and decryption methods to find a flag.
+'''
+
+
+from urllib.parse import quote, unquote
+import argparse  # sudo apt-get install python-argparse
+import hashlib  # pip install hashlib
+import base64  # pip install pybase64
+import base36  # pip install base36
+import base58  # pip install base58
+# import base62  # pip install pybase62
+import base91  # pip install base91
+# import base92  # pip install pybase64
+# import binascii - no idea :/
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-d',
+                    '--decode',
+                    action='decode',
+                    help='<Required> Set flag',
+                    required=True)

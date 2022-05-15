@@ -1,0 +1,36 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+# below is a extract from a sample exploit that
+# interfaces with a tcp socket
+import socket
+#import netcat
+
+
+bit_counter = [
+                00, 00, 00, 00, 00, 00, 00, 00,
+                00, 00, 00, 00, 00, 00, 00, 00,
+                00, 00, 00, 00, 00, 00, 00, 00,
+                00, 00, 00, 00, 00, 00, 00, 22
+                ]
+
+def main():
+    # start a new Netcat() instance
+    #nc = Netcat('0.0.0.0', 1337)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((socket.gethostname(), 1337))
+
+    # get to the prompt
+    s.read_until('Enter The Public Key of The Memory:')
+
+    # start a new note
+    write_it()
+
+
+def write_it():
+    s.write(bit_counter)
+    for i in range(0x10):
+        b = struct.pack('>I', i)   # convert an int to a big endian 4 bytes string
+        print(b)
+
+
+main()

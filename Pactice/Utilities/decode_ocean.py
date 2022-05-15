@@ -19,6 +19,9 @@ Current Issues:
     - url encode/decode requires proper HTML format. might be a way around
         - google python-urllib-unquote-corrupt
 
+TODO:
+    - Handle input string for various issues.
+        - hex/dec/bin string with commas? strip commas?
 '''
 
 
@@ -47,16 +50,16 @@ def main():
     parser.add_argument('-b64', dest='b64', help='Base64 encode')
     parser.add_argument('-b32', dest='b32', help='Base32 encode')
     parser.add_argument('-b16', dest='b16', help='Base16 encode')
-    parser.add_argument('-a85', dest='b85_1', help='Base85_1 encode')
-    parser.add_argument('-b85', dest='b85_2', help='Base85_2 encode')
+    parser.add_argument('-a85', dest='a85', help='Base85_1 encode')
+    parser.add_argument('-b85', dest='b85', help='Base85_2 encode')
     parser.add_argument('-b36', dest='b36', help='Base36 encode')
     parser.add_argument('-b58', dest='b58', help='Base58 encode')
     parser.add_argument('-b91', dest='b91', help='Base91 encode')
     parser.add_argument('-db64', dest='db64', help='Base64 decode')
     parser.add_argument('-db32', dest='db32', help='Base32 decode')
     parser.add_argument('-db16', dest='db16', help='Base16 decode')
-    parser.add_argument('-da85', dest='db85_1', help='Base85_1 decode')
-    parser.add_argument('-db85', dest='db85_2', help='Base85_2 decode')
+    parser.add_argument('-da85', dest='da85', help='Base85_1 decode')
+    parser.add_argument('-db85', dest='db85', help='Base85_2 decode')
     parser.add_argument('-db36', dest='db36', help='Base36 decode')
     parser.add_argument('-db58', dest='db58', help='Base58 decode')
     parser.add_argument('-db91', dest='db91', help='Base91 decode')
@@ -68,8 +71,8 @@ def main():
     parser.add_argument('-dbin', dest='dbin', help='Decimal To Binary ')
     parser.add_argument('-doctal', dest='doctal', help='Decimal to Octal ')
     parser.add_argument('-dhex', dest='dhex', help='Decimal to Hexadecimal')
-    parser.add_argument('-ord', dest='ord', help='Letter To ASCII')
-    parser.add_argument('-chr', dest='chr', help='ASCII To Letter')
+    parser.add_argument('-ord', dest='ord', help='String To ord')
+    parser.add_argument('-chr', dest='chr', help='ord To String')
 
     options = parser.parse_args()
 
@@ -130,15 +133,16 @@ def main():
     if options.dhex:
         dec_to_hex(options.dhex)
     if options.ord:
-        string_to_ascii(options.ord)
+        string_to_ord(options.ord)
     if options.chr:
-        ascii_to_string(options.chr)
+        ord_to_string(options.chr)
 
 
 def md5(string_input):
     '''md5 is a one-way encryption often used to store/obfuscate passwords'''
     hash_md5 = hashlib.md5()
     hash_md5.update(string_input.encode(encoding='utf-8'))
+    print(hash_md5.hexdigest())
     return hash_md5.hexdigest()
 
 
@@ -146,6 +150,7 @@ def sh1(string_input):
     '''SH1 is a one-way encryption often used to store/obfuscate passwords'''
     string_hash = hashlib.sha1()
     string_hash.update(string_input.encode())
+    print(string_hash.hexdigest())
     return string_hash.hexdigest()
 
 
@@ -296,14 +301,7 @@ def url_decode(string_input):
 
 def str_to_bin(string_input):
     '''Complete'''
-    result = ' '.join(format(ord(x), 'b') for x in string_input)
-    return result
-
-
-def str_to_dec(string_input):
-    '''Complete'''
-    encode = ' '.join(format(ord(x), 'b') for x in string_input)
-    result = ' '.join(format(ord(c), 'd') for c in encode)
+    result = ''.join(format(ord(cha), '08b') for cha in string_input)
     return result
 
 
@@ -364,21 +362,18 @@ def dec_to_hex(string_input):
     print('Hex :' + str(result))
 
 
-def string_to_ascii(string_input):
+def string_to_ord(string_input):
     '''Complete'''
     result = [ord(character) for character in string_input]
-    return str(result)
+    return ' '.join(str(character) for character in result)
 
 
-def ascii_to_string(string_input):
+def ord_to_string(string_input):
     '''todo'''
-    list_string = string_input.split(' ')
-    result = ''
-    print('ASCII :' + string_input)
-    for i in list_string:
-        i = int(i)
-        result = result + chr(i)
-    print('Letters :' + result)
+    # string_int = int(string_input.replace(' ', ''))
+    print(chr(int(string_input)))
+    result = [chr(character) for character in string_input]
+    return result
 
 
 if __name__ == '__main__':
