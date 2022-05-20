@@ -1,0 +1,96 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
+from Crypto.Cipher import AES
+from Crypto.Util.number import long_to_bytes
+import hashlib
+import random
+import socketserver
+import signal
+import sys
+
+
+def egcd(a, b):
+    '''
+    calculation od d
+    '''
+    x,y, u,v = 0,1, 1,0
+    while a != 0:
+        q, r = b//a, b%a
+        m, n = x-u*q, y-v*q
+        b,a, x,y, u,v = a,r, u,v, m,n
+    gcd = b
+    return gcd, x, y
+
+def decrypt(encrypted, shared_secret):
+    print('{} || {}'.format(encrypted, shared_secret))
+    key = hashlib.md5(long_to_bytes(shared_secret)).digest()
+    # print('key: {}'.format(key))
+    cipher = AES.new(key, AES.MODE_ECB)
+    # print('cipher {}'.format(cipher))
+    print(cipher.decrypt(encrypted))
+    print(cipher.encrypt(b"Initialization Sequence - Code 0").hex())
+    try:
+        message = cipher.decrypt(encrypted)
+        print('----------pass----------')
+    except Exception as e:
+        print(str(e))
+    return message
+
+def main():
+    count = 0
+    encrypted_sequence = bytes.fromhex('0000000000000000000000000000000000000000000000000000000000000000')
+    # encrypted_sequence =  b"Initialization Sequence - Code 0"
+    while count < 10:
+        decrypt(encrypted_sequence, 0)
+        count = count +1
+
+
+
+
+main()
+#print(cipher.encrypt(b"Initialization Sequence - Code 0", 16))
+
+
+'''
+
+5c7831615c78663761314a5c7830375c786266795c7866335c7831615c786562535c7862635c7839655c783133355c786531745c7839655c783131425c786233265c7864382a3c295c786163375c786130425c786266
+
+cipher.encrypt(pad(b'hello', BLOCK_SIZE))
+
+test
+
+import unittest
+import source
+import codecs
+from Crypto.Cipher import AES
+from Crypto.Util.number import long_to_bytes
+import hashlib
+import random
+import socketserver
+import signal
+
+class TestStringMethods(unittest.TestCase):
+    """
+    notes here
+    def test_case1(self):
+    """
+    # find the prime factors
+    def test_egcd(self):
+        a = 
+        b = 
+        x,y, u,v = 0,1, 1,0
+        while a != 0:
+            q, r = b//a, b%a
+            m, n = x-u*q, y-v*q
+            b,a, x,y, u,v = a,r, u,v, m,n
+        gcd = b
+        print(gcd, x, y)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+0101010101010101010101010101010101010101010101010101010101010101
+0000000000000000000000000000000000000000000000000000000000000000
+'''
